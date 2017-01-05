@@ -56,6 +56,10 @@ void loop()
 }
 """
 
+_msp430_template = """
+#include "fabooh/msp430/cores/fabooh/main.h"
+
+"""
 
 _default_makefile_template = """
 all :
@@ -70,11 +74,18 @@ CPPFLAGS = -std=c++11
 include /usr/share/arduino/Arduino.mk
 """
 
+_msp430_makefile_template = """
+BOARD = msp430g2553in20
+CPPFLAGS = -std=c++11
+
+include /usr/share/arduino/msp430.mk
+"""
+
 def default_result_filename(build_dir, cname):
     result = os.path.join(build_dir, cname)
     return result
 
-def arduino_result_filename(build_dir, cname):
+def controller_result_filename(build_dir, cname):
     hexfile = None
     print(os.listdir(build_dir))
     build_sub_dir = "build-leonardo"         # default
@@ -98,30 +109,36 @@ def arduino_result_filename(build_dir, cname):
 cpp_templates = {
     "default" : _default_template,
     "arduino" : _arduino_template,
+    "msp430" : _arduino_template,
 }
 
 makefile_templates = {
     "default" : _default_makefile_template,
     "arduino" : _arduino_makefile_template,
+    "msp430" : _arduino_makefile_template,
 }
 
 mainfile_extensions = {
     "default" : "c",
     "arduino" : "ino",
+    "msp430" : "msp",
 }
 
 clib_exclusions = {
     "default" : [],
     "arduino" : [],
+    "msp430" : [],
 }
 
 result_file = {
     "default" : default_result_filename,
-    "arduino" : arduino_result_filename,
+    "arduino" : controller_result_filename,
+    "msp430" : controller_result_filename,
 
 }
 
 modify_result_file = {
     "default": lambda x: x,
     "arduino": lambda x: x+".hex",
+    "msp430": lambda x: x+".hex",
 }
